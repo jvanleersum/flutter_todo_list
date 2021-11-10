@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:todo_list/models/favorite_tasks.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_list/models/task_data.dart';
 
-class AddTaskScreen extends StatelessWidget {
+class AddFavoriteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    String taskTitle = "";
-
+    String favoriteTaskTitle = "";
     return Container(
         color: Color(0xff757575),
         child: Container(
@@ -23,7 +22,7 @@ class AddTaskScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  "Add Task",
+                  "Add Favorite Task",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Colors.lightBlueAccent,
@@ -34,7 +33,7 @@ class AddTaskScreen extends StatelessWidget {
                   autofocus: true,
                   textAlign: TextAlign.center,
                   onChanged: (newValue) {
-                    taskTitle = newValue;
+                    favoriteTaskTitle = newValue;
                   },
                 ),
                 SizedBox(
@@ -46,9 +45,9 @@ class AddTaskScreen extends StatelessWidget {
                         MaterialStateProperty.all(Colors.lightBlueAccent),
                   ),
                   onPressed: () {
-                    if (taskTitle != "") {
-                      Provider.of<TaskData>(context, listen: false)
-                          .addTask(taskTitle);
+                    if (favoriteTaskTitle != "") {
+                      Provider.of<FavoriteTasksData>(context, listen: false)
+                          .addTask(favoriteTaskTitle);
                       Navigator.pop(context);
                     }
                   },

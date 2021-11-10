@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list/screens/favorites_screen.dart';
-import 'package:todo_list/widgets/tasks_list.dart';
-import 'package:todo_list/popup_screens/add_task_screen.dart';
+import 'package:todo_list/models/favorite_tasks.dart';
+import 'package:todo_list/popup_screens/add_favorite_screen.dart';
+import 'package:todo_list/widgets/favorite_tasks_list.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_list/models/task_data.dart';
+import 'package:todo_list/screens/tasks_screen.dart';
 
-class TasksScreen extends StatelessWidget {
+class FavoriteTasksScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final taskCount = Provider.of<TaskData>(context).taskCount;
+    final favoriteTasksCount =
+        Provider.of<FavoriteTasksData>(context).favoriteTasksCount;
     return Scaffold(
-      backgroundColor: Colors.lightBlueAccent,
+      backgroundColor: Colors.amberAccent,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.lightBlueAccent,
+        backgroundColor: Colors.amberAccent,
         child: Icon(Icons.add),
         onPressed: () {
           showModalBottomSheet(
@@ -22,7 +23,7 @@ class TasksScreen extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom),
-                child: AddTaskScreen(),
+                child: AddFavoriteScreen(),
               ),
             ),
           );
@@ -42,14 +43,14 @@ class TasksScreen extends StatelessWidget {
                   children: [
                     IconButton(
                       icon: Icon(
-                        Icons.star,
+                        Icons.list,
                         size: 30.0,
                         color: Colors.white,
                       ),
                       onPressed: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return FavoriteTasksScreen();
+                          return TasksScreen();
                         }));
                       },
                     ),
@@ -59,7 +60,7 @@ class TasksScreen extends StatelessWidget {
                   height: 10.0,
                 ),
                 Text(
-                  "My To Do's",
+                  "Favorite To Do's",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 40.0,
@@ -67,7 +68,7 @@ class TasksScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "$taskCount Tasks",
+                  "$favoriteTasksCount Favorite Tasks",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18.0,
@@ -77,7 +78,7 @@ class TasksScreen extends StatelessWidget {
             ),
           ),
           Visibility(
-            visible: (taskCount == 0),
+            visible: (favoriteTasksCount == 0),
             child: Expanded(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -93,7 +94,7 @@ class TasksScreen extends StatelessWidget {
                     padding:
                         const EdgeInsets.only(left: 8.0, right: 8.0, top: 30),
                     child: Text(
-                      'No tasks yet! Add some and get to work 💪',
+                      'No favorite tasks yet! Add some and make your life easier ⭐',
                       style:
                           TextStyle(fontStyle: FontStyle.italic, fontSize: 16),
                     ),
@@ -103,7 +104,7 @@ class TasksScreen extends StatelessWidget {
             ),
           ),
           Visibility(
-            visible: (taskCount != 0),
+            visible: (favoriteTasksCount != 0),
             child: Expanded(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -112,7 +113,7 @@ class TasksScreen extends StatelessWidget {
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20.0),
                         topRight: Radius.circular(20.0))),
-                child: TasksList(),
+                child: FavoriteTasksList(),
               ),
             ),
           ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_list/widgets/task_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/models/task_data.dart';
+import 'package:todo_list/models/favorite_tasks.dart';
 
 class TasksList extends StatefulWidget {
   @override
@@ -16,18 +17,35 @@ class _TasksListState extends State<TasksList> {
         return ListView.builder(
           itemBuilder: (context, index) {
             final task = taskData.tasks[index];
+            final title = task.name;
             return Dismissible(
-              key: Key(task.name),
+              key: UniqueKey(),
+              direction: DismissDirection.horizontal,
               onDismissed: (direction) {
-                // Remove the item from the data source.
-                setState(() {
-                  taskData.tasks.removeAt(index);
-                });
-                // Then show a snackbar.
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text('$task removed')));
+                if (direction == DismissDirection.endToStart) {
+                  setState(() {
+                    taskData.removeTask(task);
+                  });
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('$title removed')));
+                } else if (direction == DismissDirection.startToEnd) {
+                  setState(() {
+                    Provider.of<FavoriteTasksData>(context, listen: false)
+                        .addTask(title);
+                  });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('$title added to favorites')));
+                }
               },
               background: Container(
+                color: Colors.amberAccent,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Icon(Icons.star, color: Colors.white),
+                ),
+                alignment: Alignment.centerLeft,
+              ),
+              secondaryBackground: Container(
                 color: Colors.red,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
